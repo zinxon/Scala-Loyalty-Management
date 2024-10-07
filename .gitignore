@@ -2,6 +2,7 @@
 .vscode
 .metals
 target/
+output/
 chk-point-dir/
 tmp/
 *.crc
