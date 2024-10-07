@@ -1,4 +1,4 @@
-# Kafka Stream Invoices Processing with Apache Spark (Docker)
+****# Kafka Stream Invoices Processing & loyalty program management with Scala & Apache Spark (Docker)
 
 This Spark Streaming application processes retail invoice data from Kafka. 
 It reads invoices, calculates customer loyalty points (0.2 points per dollar spent), 
@@ -22,7 +22,9 @@ loyalty program management, and automated customer reward calculations, streamli
 ## Setup
 
 1. Start the Kafka and Zookeeper containers:
-   docker-compose up -d
+   ```
+   docker-compose -p invoices-kafka-kraft up -d
+   ```
 
 2. Create the Kafka topic (invoices & notifications):
    ```
@@ -62,7 +64,7 @@ loyalty program management, and automated customer reward calculations, streamli
    
 4. To consume messages from notifications topic:   
    ```
-   docker exec -it kafka kafka-console-consumer --bootstrap-server localhost:9092 --topic notifications
+   docker exec -it kafka kafka-console-consumer --bootstrap-server localhost:9092 --topic notifications --from-beginning
    ```
   
 5. Send Invoice data to invoices to invoices topic
