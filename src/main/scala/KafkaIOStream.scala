@@ -1,3 +1,5 @@
+import com.typesafe.config.ConfigFactory
+import org.apache.log4j.Logger
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions.{col, expr, from_json}
 import org.apache.spark.sql.streaming.Trigger
@@ -5,6 +7,9 @@ import org.apache.spark.sql.types.{ArrayType, DoubleType, IntegerType, LongType,
 
 object KafkaIOStream extends Serializable{
   def main(args: Array[String]): Unit = {
+    @transient lazy val logger: Logger = Logger.getLogger(getClass.getName)
+
+    val conf = ConfigFactory.load
     val spark = SparkSession.builder()
       .appName("Kafka Streaming")
       .master("local[*]")
@@ -45,7 +50,7 @@ object KafkaIOStream extends Serializable{
 
     val kafkaSourceDF = spark.readStream
       .format("kafka")
-      .option("kafka.bootstrap.servers", "localhost:9092")
+      .option("kafka.bootstrap.servers", conf.getString("kafka.broker"))
       .option("subscribe", "invoices")
       .option("startingOffsets", "earliest")
       .load()
@@ -64,12 +69,13 @@ object KafkaIOStream extends Serializable{
     val notificationWriterQuery = kafkaTargetDF.writeStream
       .format("kafka")
       .queryName("Notification Writer")
-      .option("kafka.bootstrap.servers", "localhost:9092")
+      .option("kafka.bootstrap.servers", conf.getString("kafka.broker"))
       .option("topic", "notifications")
       .option("checkpointLocation", "chk-point-dir")
       .outputMode("append")
       .start()
 
+    logger.info(s"Listening and writing to ${conf.getString("kafka.broker")}")
     notificationWriterQuery.awaitTermination()
   }
 }

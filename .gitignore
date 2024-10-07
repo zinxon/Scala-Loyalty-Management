@@ -1,0 +1,7 @@
+.idea
+.vscode
+target/
+chk-point-dir/
+tmp/
+*.crc
+.*.crc
