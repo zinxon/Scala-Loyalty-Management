@@ -1,8 +1,8 @@
 # Kafka Stream Invoices Processing & loyalty program management with Scala & Apache Spark (Docker)
 
-This Spark Streaming application processes retail invoice data from Kafka. 
-It reads invoices, calculates customer loyalty points (0.2 points per dollar spent), 
-and sends notifications to another Kafka topic. The program enables real-time sales tracking, 
+This Spark Streaming application processes retail invoice data from Kafka.
+It reads invoices, calculates customer loyalty points (0.2 points per dollar spent),
+and sends notifications to another Kafka topic. The program enables real-time sales tracking,
 loyalty program management, and automated customer reward calculations, streamlining retail operations and enhancing customer engagement.
 
 ## Project Structure
@@ -10,7 +10,7 @@ loyalty program management, and automated customer reward calculations, streamli
 - `src/main/scala/KafkaIOStream.scala`: Main Scala application for Kafka stream processing for Input Stream & Output Stream
 - `docker-compose.yml`: Docker Compose file for setting up Kafka and Zookeeper
 - `build.sbt`: SBT build configuration file
-- `samples.json`: Sample Invoice Data 
+- `samples.json`: Sample Invoice Data
 
 ## Prerequisites
 
@@ -22,11 +22,13 @@ loyalty program management, and automated customer reward calculations, streamli
 ## Setup
 
 1. Start the Kafka and Zookeeper containers:
+
    ```
    docker-compose -p invoices-kafka-kraft up -d
    ```
 
 2. Create the Kafka topic (invoices & notifications):
+
    ```
    docker exec -it kafka kafka-topics --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic invoices
    docker exec -it kafka kafka-topics --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic notifications
@@ -53,7 +55,7 @@ loyalty program management, and automated customer reward calculations, streamli
 2. Run the Spark application:
 
    ```
-   sbt run
+   sbt run build.sbt
    ```
 
 3. To produce messages to the invoices topic:
@@ -61,17 +63,17 @@ loyalty program management, and automated customer reward calculations, streamli
    ```
    docker exec -it kafka kafka-console-producer --broker-list localhost:9092 --topic invoices
    ```
-   
-4. To consume messages from notifications topic:   
+
+4. To consume messages from notifications topic:
+
    ```
    docker exec -it kafka kafka-console-consumer --bootstrap-server localhost:9092 --topic notifications --from-beginning
    ```
-  
+
 5. Send Invoice data to invoices to invoices topic
    ```
    {"InvoiceNumber":"51402977","CreatedTime":1595688900348,"StoreID":"STR7188","PosID":"POS956","CashierID":"OAS134","CustomerType":"PRIME","CustomerCardNo":"4629185211","TotalAmount":11114.0,"NumberOfItems":4,"PaymentMethod":"CARD","TaxableAmount":11114.0,"CGST":277.85,"SGST":277.85,"CESS":13.8925,"DeliveryType":"TAKEAWAY","InvoiceLineItems":[{"ItemCode":"458","ItemDescription":"Wine glass","ItemPrice":1644.0,"ItemQty":2,"TotalValue":3288.0},{"ItemCode":"283","ItemDescription":"Portable Lamps","ItemPrice":2236.0,"ItemQty":1,"TotalValue":2236.0},{"ItemCode":"498","ItemDescription":"Carving knifes","ItemPrice":1424.0,"ItemQty":2,"TotalValue":2848.0},{"ItemCode":"523","ItemDescription":"Oil-lamp clock","ItemPrice":1371.0,"ItemQty":2,"TotalValue":2742.0}]}
    ```
-   
 6. Open Kafka UI to check all the information of Kafka:
    ```
    localhost:8090
@@ -80,7 +82,7 @@ loyalty program management, and automated customer reward calculations, streamli
    ```
    localhost:4040
    ```
-   
+
 ## Application Details
 
 The main application (`KafkaStream.scala`) does the following:
